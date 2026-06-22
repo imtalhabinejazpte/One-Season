@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Season Pass Maintenance Program — One Season Heating &amp; Air</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+
+  /* ===== Brand tokens (from concept system) ===== */
+  :root{
+    --ink:#0C1E30; --paper:#F5F7F6; --warm:#E8822A; --warm-deep:#C96A18;
+    --cool:#2E7C9A; --cool-deep:#246079; --line:#E2E6E3; --muted:#5E6B76;
+    --warm-soft:#FBEEDF; --cool-soft:#E4EFF3; --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Hanken Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:'Archivo',sans-serif;letter-spacing:-.015em;line-height:1.06}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:'Archivo';font-weight:700;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cool)}
+  .btn{display:inline-flex;width:100%;align-items:center;justify-content:center;gap:.5rem;font-family:'Archivo';
+    font-weight:700;font-size:.95rem;padding:.9rem 1.3rem;border-radius:12px;cursor:pointer;border:1.6px solid transparent;
+    text-decoration:none;transition:background .18s,border-color .18s,color .18s,transform .1s}
+  .btn:active{transform:scale(.985)}
+  .btn svg{width:18px;height:18px}
+  .btn-primary{background:var(--warm);color:#fff;box-shadow:0 10px 22px rgba(232,130,42,.32)}
+  .btn-primary:hover{background:var(--warm-deep)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:rgba(12,30,48,.2)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-w{width:auto}
+  :focus-visible{outline:3px solid var(--cool);outline-offset:3px}
+
+  /* ===== HERO STAGE ===== */
+  .stage{position:relative;overflow:hidden;color:#fff;
+    background:
+      radial-gradient(70% 70% at 82% 8%, rgba(46,124,154,.22), transparent 55%),
+      radial-gradient(70% 70% at 12% 96%, rgba(232,130,42,.22), transparent 55%),
+      linear-gradient(160deg,#0E2236,#081521);
+    padding:84px 0 70px;text-align:center}
+  .stage .eyebrow{color:var(--warm)}
+  .stage h1{font-size:clamp(2.2rem,5.4vw,3.7rem);font-weight:900;margin:.9rem auto .9rem;max-width:14ch}
+  .stage h1 em{color:var(--warm);font-style:normal}
+  .stage .lead{color:rgba(255,255,255,.74);font-size:1.12rem;line-height:1.55;max-width:560px;margin:0 auto 28px}
+  .stage .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+  .stage .cta-row .btn{width:auto}
+  .stage .btn-ghost{color:#fff;border-color:rgba(255,255,255,.3)}
+  .stage .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+
+  .fan{display:flex;justify-content:center;gap:0;perspective:1600px;min-height:300px;align-items:center;margin:46px 0 36px}
+  .fan .passcard{margin:0 -34px}
+  .fan .passcard:nth-child(1){transform:rotate(-9deg) translateY(14px)}
+  .fan .passcard:nth-child(2){transform:translateY(-12px) scale(1.06);z-index:3}
+  .fan .passcard:nth-child(3){transform:rotate(9deg) translateY(14px)}
+  .fan .passcard:hover{transform:translateY(-22px) scale(1.09);z-index:5}
+
+  .trust-strip{display:flex;justify-content:center;flex-wrap:wrap;gap:14px 30px;padding-top:30px;
+    border-top:1px solid rgba(255,255,255,.14);max-width:880px;margin:0 auto}
+  .trust-strip span{display:inline-flex;align-items:center;gap:8px;font-size:.92rem;color:rgba(255,255,255,.82);font-weight:500}
+  .trust-strip svg{width:17px;height:17px;color:var(--warm)}
+
+  /* ===== Membership pass card ===== */
+  .passcard{position:relative;width:340px;aspect-ratio:1.585/1;border-radius:18px;padding:22px 24px;color:#fff;
+    overflow:hidden;flex:none;box-shadow:0 2px 4px rgba(0,0,0,.2),0 26px 50px rgba(0,0,0,.4);
+    transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease;isolation:isolate;display:flex;flex-direction:column}
+  .passcard .guil{position:absolute;inset:0;z-index:0;opacity:.5;mix-blend-mode:soft-light}
+  .passcard::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+    background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.32) 46%,rgba(255,255,255,.06) 56%,transparent 70%);
+    transform:translateX(-130%);transition:transform .9s ease}
+  .passcard:hover::after{transform:translateX(130%)}
+  .passcard > *{position:relative;z-index:2}
+  .steel{background:linear-gradient(150deg,#6A7A87 0%,#3A4854 55%,#222D37 100%);color:#EAF0F3}
+  .gold{background:linear-gradient(150deg,#F2B65C 0%,#D08A33 55%,#A6691F 100%);color:#22160A}
+  .onyx{background:linear-gradient(150deg,#26323D 0%,#121C25 55%,#070D13 100%);color:#F3EBDA}
+  .pc-top{display:flex;justify-content:space-between;align-items:flex-start}
+  .pc-brand{font-family:'Archivo';font-weight:800;font-size:.92rem;letter-spacing:.04em}
+  .pc-brand small{display:block;font-weight:600;font-size:.6rem;letter-spacing:.22em;opacity:.7;margin-top:2px}
+  .pc-tier{font-family:'Archivo';font-weight:900;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:.28rem .6rem;border-radius:30px;border:1px solid currentColor;opacity:.95}
+  .pc-chip{width:44px;height:33px;border-radius:6px;margin:14px 0 0;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#F6DF9B,#C99B45 55%,#EBC978);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+  .pc-chip::before{content:"";position:absolute;inset:4px;border-radius:3px;
+    background:linear-gradient(90deg,transparent 46%,rgba(0,0,0,.22) 46% 54%,transparent 54%),
+      linear-gradient(0deg,transparent 30%,rgba(0,0,0,.22) 30% 36%,transparent 36% 64%,rgba(0,0,0,.22) 64% 70%,transparent 70%)}
+  .onyx .pc-chip{background:linear-gradient(135deg,#E8C572,#A6791F 55%,#D8B45E)}
+  .pc-name{font-family:'Archivo';font-weight:900;font-size:1.9rem;margin-top:auto;line-height:1}
+  .pc-name span{font-weight:600;font-size:.95rem;letter-spacing:.32em;text-transform:uppercase;display:block;opacity:.72;margin-top:.45rem}
+  .pc-meta{display:flex;gap:18px;margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.22)}
+  .gold .pc-meta{border-color:rgba(34,22,10,.2)}
+  .pc-meta div{line-height:1.15}
+  .pc-meta b{font-family:'Archivo';font-weight:800;font-size:.95rem;display:block}
+  .pc-meta small{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+
+  /* ===== Generic section shell ===== */
+  .sec{padding:84px 0}
+  .sec--paper{background:var(--paper)}
+  .sec--white{background:#fff}
+  .sec-head{text-align:center;max-width:660px;margin:0 auto 52px}
+  .sec-head h2{font-size:clamp(1.8rem,3.6vw,2.6rem);font-weight:800;margin:.55rem 0 .7rem}
+  .sec-head p{color:var(--muted);font-size:1.06rem;line-height:1.55}
+
+  /* ===== Benefits ===== */
+  .bene{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .bcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 26px;
+    box-shadow:0 1px 2px rgba(12,30,48,.04)}
+  .sec--white .bcard{background:var(--paper)}
+  .bcard .ic{width:48px;height:48px;border-radius:14px;background:var(--warm-soft);display:flex;align-items:center;justify-content:center;color:var(--warm-deep);margin-bottom:16px}
+  .bcard .ic svg{width:25px;height:25px}
+  .bcard h3{font-size:1.18rem;font-weight:800;margin-bottom:8px}
+  .bcard p{font-size:.95rem;line-height:1.55;color:var(--muted)}
+
+  /* ===== How it works ===== */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .step{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px}
+  .step .num{width:44px;height:44px;border-radius:13px;background:var(--warm);color:#fff;font-family:'Archivo';font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .step h3{font-size:1.18rem;font-weight:800;margin-bottom:8px}
+  .step p{font-size:.95rem;line-height:1.55;color:var(--muted)}
+
+  /* ===== Pricing ===== */
+  .toggle-wrap{display:flex;justify-content:center;align-items:center;gap:12px;margin:0 0 44px;flex-wrap:wrap}
+  .toggle{display:inline-flex;background:#E7EBE8;border-radius:999px;padding:4px;position:relative}
+  .sec--white .toggle{background:#EFF1EE}
+  .toggle button{font-family:'Archivo';font-size:.86rem;font-weight:700;color:var(--muted);border:0;background:transparent;cursor:pointer;padding:9px 22px;border-radius:999px;transition:color .2s;position:relative;z-index:1}
+  .toggle button[aria-pressed="true"]{color:var(--ink)}
+  .toggle .thumb{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:#fff;border-radius:999px;box-shadow:0 1px 4px rgba(12,30,48,.16);transition:transform .22s cubic-bezier(.4,0,.2,1);z-index:0}
+  .toggle[data-mode="annual"] .thumb{transform:translateX(100%)}
+  .save{font-family:'Archivo';font-size:.78rem;font-weight:700;color:var(--warm-deep);background:var(--warm-soft);padding:6px 12px;border-radius:999px}
+
+  .plan-row{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-items:stretch}
+  .plancard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px 16px 26px;
+    box-shadow:0 1px 2px rgba(12,30,48,.05),0 18px 40px rgba(12,30,48,.08);display:flex;flex-direction:column;
+    transition:transform .2s ease,box-shadow .2s ease}
+  .plancard:hover{transform:translateY(-5px);box-shadow:0 24px 56px rgba(12,30,48,.16)}
+  .plancard.feat{border:2px solid var(--warm)}
+  .plancard .passcard{width:100%;aspect-ratio:1.72/1;margin:0}
+  .pc-popular{position:absolute;top:14px;right:14px;z-index:6;background:#fff;color:var(--warm-deep);
+    font-family:'Archivo';font-weight:800;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:.34rem .62rem;border-radius:30px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+  .plan-body{padding:24px 12px 0;display:flex;flex-direction:column;flex-grow:1}
+  .plan-price{display:flex;align-items:baseline;gap:.3rem}
+  .plan-price .amt{font-family:'Archivo';font-weight:900;font-size:2.6rem}
+  .plan-price .per{color:var(--muted);font-weight:600;font-size:.92rem}
+  .plan-note{font-size:.78rem;color:var(--muted);margin:.2rem 0 1.2rem;min-height:1rem}
+  .plan-cta{margin-bottom:22px}
+  .incl{font-family:'Archivo';font-weight:700;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;padding-top:20px;border-top:1px solid var(--line)}
+  .plan-feats{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin:0;flex-grow:1}
+  .plan-feats li{display:flex;gap:.55rem;font-size:.93rem;line-height:1.4;align-items:flex-start}
+  .plan-feats li svg{flex:none;margin-top:2px;width:17px;height:17px}
+  .plan-feats b{font-weight:700}
+
+  /* ===== Comparison table ===== */
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:20px;background:#fff}
+  table.tbl{width:100%;border-collapse:collapse;min-width:680px}
+  .tbl th,.tbl td{padding:16px 20px;text-align:center;font-size:.95rem;border-bottom:1px solid var(--line)}
+  .tbl thead th{font-family:'Archivo';font-size:1.05rem;font-weight:800;color:var(--ink)}
+  .tbl tbody th{text-align:left;font-weight:600;color:var(--muted);font-family:'Hanken Grotesk'}
+  .tbl td.feat{background:#FFF7EF}
+  .tbl thead th.feat{background:var(--warm-soft);color:var(--warm-deep)}
+  .tbl thead th .pop{display:block;font-family:'Archivo';font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+  .tbl .yes svg{width:18px;height:18px;color:var(--cool)}
+  .tbl .feat .yes svg,.tbl td.feat.yes svg{color:var(--warm-deep)}
+  .tbl .no{color:#C2C8CC}
+  .tbl tr:last-child td,.tbl tr:last-child th{border-bottom:0}
+  .tbl .price-row td,.tbl .price-row th{font-family:'Archivo';font-size:1.3rem;font-weight:900;color:var(--ink)}
+
+  /* ===== Testimonials ===== */
+  .rating{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:14px}
+  .stars{color:var(--warm);display:inline-flex;gap:2px}
+  .stars svg{width:20px;height:20px}
+  .revs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .rev{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 26px}
+  .sec--white .rev{background:var(--paper)}
+  .rev .qstars{color:var(--warm);display:flex;gap:2px;margin-bottom:14px}
+  .rev .qstars svg{width:16px;height:16px}
+  .rev p{font-size:1rem;line-height:1.6;margin-bottom:20px}
+  .rev .who{display:flex;align-items:center;gap:12px}
+  .rev .av{width:42px;height:42px;border-radius:999px;background:var(--cool-soft);color:var(--cool-deep);font-family:'Archivo';font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .rev .who b{display:block;font-size:.93rem;font-weight:700}
+  .rev .who small{font-size:.82rem;color:var(--muted)}
+
+  /* ===== FAQ ===== */
+  .faq{max-width:780px;margin:0 auto}
+  .q{border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:12px;overflow:hidden}
+  .q summary{list-style:none;cursor:pointer;padding:20px 24px;font-family:'Archivo';font-size:1.05rem;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q summary::-webkit-details-marker{display:none}
+  .q summary .chev{flex:none;transition:transform .2s;color:var(--warm-deep)}
+  .q summary .chev svg{width:20px;height:20px;display:block}
+  .q[open] summary .chev{transform:rotate(180deg)}
+  .q .ans{padding:0 24px 20px;font-size:.97rem;line-height:1.62;color:var(--muted)}
+
+  /* ===== Final CTA ===== */
+  .cta-stage{position:relative;overflow:hidden;color:#fff;padding:84px 0;
+    background:
+      radial-gradient(60% 80% at 88% 10%, rgba(46,124,154,.22), transparent 55%),
+      radial-gradient(70% 80% at 8% 95%, rgba(232,130,42,.22), transparent 55%),
+      linear-gradient(160deg,#0E2236,#081521)}
+  .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+  .cta-stage h2{color:#fff;font-size:clamp(1.9rem,4vw,2.8rem);font-weight:900;margin-bottom:16px}
+  .cta-stage .lead{color:rgba(255,255,255,.74);font-size:1.08rem;line-height:1.6;margin-bottom:24px}
+  .cta-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+  .cta-list li{display:flex;gap:10px;align-items:center;font-size:1rem;color:rgba(255,255,255,.9)}
+  .cta-list svg{width:20px;height:20px;color:var(--warm);flex:none}
+  .form{background:#fff;border-radius:22px;padding:32px;color:var(--ink)}
+  .form h3{font-size:1.4rem;font-weight:800;margin-bottom:4px}
+  .form .sub{font-size:.9rem;color:var(--muted);margin-bottom:20px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-family:'Archivo';font-size:.8rem;font-weight:700;margin-bottom:6px}
+  .field input,.field select{width:100%;font-family:'Hanken Grotesk';font-size:.98rem;color:var(--ink);padding:13px 14px;border:1.5px solid var(--line);border-radius:11px;background:#fff;transition:border-color .15s,box-shadow .15s}
+  .field input:focus,.field select:focus{outline:0;border-color:var(--warm);box-shadow:0 0 0 3px rgba(232,130,42,.16)}
+  .form .fine{font-size:.76rem;color:var(--muted);text-align:center;margin-top:14px}
+
+  /* ===== Responsive ===== */
+  @media(max-width:900px){
+    .fan{flex-direction:column;gap:20px;perspective:none}
+    .fan .passcard{margin:0;width:100%;max-width:330px}
+    .fan .passcard:nth-child(1),.fan .passcard:nth-child(2),.fan .passcard:nth-child(3){transform:none}
+    .fan .passcard:hover{transform:translateY(-8px)}
+    .bene,.steps,.revs,.plan-row{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+    .plancard.feat{order:-1}
+    .cta-grid{grid-template-columns:1fr;gap:38px}
+  }
+  @media(max-width:520px){
+    .sec,.stage,.cta-stage{padding:56px 0}
+    .wrap{padding:0 16px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}.passcard::after{display:none}}
+</style>
+</head>
+<body>
+
+<!-- shared guilloché security pattern -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="guil" width="46" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <path d="M0 11 Q 11.5 0 23 11 T 46 11" fill="none" stroke="#fff" stroke-width="0.7"/>
+      <path d="M0 17 Q 11.5 6 23 17 T 46 17" fill="none" stroke="#fff" stroke-width="0.5" opacity=".6"/>
+    </pattern>
+  </defs>
+</svg>
+
+<!-- ============ HERO ============ -->
+<header class="stage">
+  <div class="wrap">
+    <span class="eyebrow">Season Pass Maintenance Program</span>
+    <h1>Comfort that never takes a <em>season off.</em></h1>
+    <p class="lead">Join the Season Pass and we'll keep your heating and cooling running its best — two pro tune-ups a year, priority service, and members-only savings on every repair.</p>
+    <div class="cta-row">
+      <a href="#plans" class="btn btn-primary">See the plans<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a href="tel:+19495903296" class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(949) 590-3296</a>
+    </div>
+
+    <div class="fan">
+      <div class="passcard steel">
+        <svg class="guil" style="color:#fff"><rect width="100%" height="100%" fill="url(#guil)"/></svg>
+        <div class="pc-top"><div class="pc-brand">ONE SEASON<small>HEATING &amp; AIR</small></div><div class="pc-tier">Basic</div></div>
+        <div class="pc-chip"></div>
+        <div class="pc-name">Season Pass<span>Steel</span></div>
+        <div class="pc-meta"><div><b>5-HR</b><small>Arrival</small></div><div><b>2×/yr</b><small>Tune-ups</small></div><div><b>1-YR</b><small>Warranty</small></div></div>
+      </div>
+      <div class="passcard gold">
+        <svg class="guil" style="color:#5a3a12"><rect width="100%" height="100%" fill="url(#guil)"/></svg>
+        <div class="pc-top"><div class="pc-brand">ONE SEASON<small>HEATING &amp; AIR</small></div><div class="pc-tier">Premium</div></div>
+        <div class="pc-chip"></div>
+        <div class="pc-name">Season Pass<span>Gold</span></div>
+        <div class="pc-meta"><div><b>3-HR</b><small>Arrival</small></div><div><b>5%</b><small>Off repairs</small></div><div><b>LIFETIME</b><small>Warranty</small></div></div>
+      </div>
+      <div class="passcard onyx">
+        <svg class="guil" style="color:#caa45e"><rect width="100%" height="100%" fill="url(#guil)"/></svg>
+        <div class="pc-top"><div class="pc-brand">ONE SEASON<small>HEATING &amp; AIR</small></div><div class="pc-tier">Ultimate</div></div>
+        <div class="pc-chip"></div>
+        <div class="pc-name">Season Pass<span>Onyx</span></div>
+        <div class="pc-meta"><div><b>2-HR</b><small>Arrival</small></div><div><b>15%</b><small>Off repairs</small></div><div><b>LIFETIME</b><small>Warranty</small></div></div>
+      </div>
+    </div>
+
+    <div class="trust-strip">
+      <span><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg>4.9 from 500+ neighbors</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.5 13.5 7 22l5-3 5 3-1.5-8.5"/></svg>Best of Business 2024</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Licensed &amp; insured · #1038022</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ BENEFITS ============ -->
+<section class="sec sec--white">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Why join</span>
+      <h2>Maintenance that pays for itself</h2>
+      <p>A cared-for system runs cheaper, breaks down less, and lasts years longer. Every Season Pass — Steel, Gold, or Onyx — includes:</p>
+    </div>
+    <div class="bene">
+      <div class="bcard">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+        <h3>Two seasonal tune-ups</h3>
+        <p>A full spring and fall visit, so your system's ready before the heat and the cold arrive.</p>
+      </div>
+      <div class="bcard">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.7 6.3-1 1 3 3 1-1a2.1 2.1 0 0 0-3-3zM3 17l8.5-8.5 3 3L6 20H3z"/></svg></span>
+        <h3>Inspection &amp; cleaning</h3>
+        <p>We test, clean, and tune every key part so it runs safely and on the lowest possible bill.</p>
+      </div>
+      <div class="bcard">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5H5a2 2 0 0 0-2 2v3a3 3 0 0 1 0 6v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2zM12 7v10"/></svg></span>
+        <h3>Rainy Day Fund credits</h3>
+        <p>Every month of membership earns credit toward the day you need a new system.</p>
+      </div>
+      <div class="bcard">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <h3>Priority scheduling</h3>
+        <p>Members jump the line with faster arrival windows — as quick as two hours on Onyx.</p>
+      </div>
+      <div class="bcard">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9zM13.7 21a2 2 0 0 1-3.4 0"/></svg></span>
+        <h3>Reminders &amp; arrival alerts</h3>
+        <p>We remember your appointments and text you when your technician is on the way.</p>
+      </div>
+      <div class="bcard">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <h3>Repair warranty</h3>
+        <p>Every repair is backed — up to a lifetime warranty on Gold and Onyx memberships.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="sec sec--paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2>Set it up in five minutes</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="num">1</span><h3>Pick your pass</h3><p>Choose the level of care that fits your home and budget — Steel, Gold, or Onyx.</p></div>
+      <div class="step"><span class="num">2</span><h3>We handle the scheduling</h3><p>We book your spring and fall tune-ups and send reminders plus arrival alerts every time.</p></div>
+      <div class="step"><span class="num">3</span><h3>Relax — you're covered</h3><p>Enjoy lower bills, fewer breakdowns, and members-only savings whenever you need a repair.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="sec sec--white" id="plans">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Choose your pass</span>
+      <h2>Three tiers, one peace of mind</h2>
+      <p>The same Season Pass you saw above — now pick the one that's right for you. No contracts, cancel anytime.</p>
+    </div>
+
+    <div class="toggle-wrap">
+      <div class="toggle" data-mode="monthly" role="group" aria-label="Billing period">
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" data-bill="monthly" aria-pressed="true">Monthly</button>
+        <button type="button" data-bill="annual" aria-pressed="false">Annual</button>
+      </div>
+      <span class="save">2 months free</span>
+    </div>
+
+    <div class="plan-row">
+
+      <!-- BASIC / STEEL -->
+      <div class="plancard">
+        <div class="passcard steel">
+          <svg class="guil" style="color:#fff"><rect width="100%" height="100%" fill="url(#guil)"/></svg>
+          <div class="pc-top"><div class="pc-brand">ONE SEASON<small>HEATING &amp; AIR</small></div><div class="pc-tier">Basic</div></div>
+          <div class="pc-name" style="font-size:1.5rem">Season Pass<span style="font-size:.74rem">Steel</span></div>
+        </div>
+        <div class="plan-body">
+          <div class="plan-price"><span class="amt" data-monthly="$14" data-annual="$140">$14</span><span class="per" data-monthly="/ mo" data-annual="/ yr">/ mo</span></div>
+          <div class="plan-note" data-monthly="Billed monthly · cancel anytime" data-annual="Billed annually · 2 months free">Billed monthly · cancel anytime</div>
+          <a href="#signup" class="btn btn-ghost plan-cta">Get Steel</a>
+          <p class="incl">What's included</p>
+          <ul class="plan-feats">
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>2 tune-ups</b> a year (spring + fall)</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Full inspection &amp; cleaning</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Rainy Day Fund</b> credits</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Reminders &amp; arrival alerts</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Up to <b>5-hour</b> arrival window</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>$95 diagnostic</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>1-year</b> repair warranty</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PREMIUM / GOLD -->
+      <div class="plancard feat">
+        <div class="passcard gold">
+          <span class="pc-popular">★ Most Popular</span>
+          <svg class="guil" style="color:#5a3a12"><rect width="100%" height="100%" fill="url(#guil)"/></svg>
+          <div class="pc-top"><div class="pc-brand">ONE SEASON<small>HEATING &amp; AIR</small></div><div class="pc-tier">Premium</div></div>
+          <div class="pc-name" style="font-size:1.5rem">Season Pass<span style="font-size:.74rem">Gold</span></div>
+        </div>
+        <div class="plan-body">
+          <div class="plan-price"><span class="amt" data-monthly="$24" data-annual="$240">$24</span><span class="per" data-monthly="/ mo" data-annual="/ yr">/ mo</span></div>
+          <div class="plan-note" data-monthly="Billed monthly · cancel anytime" data-annual="Billed annually · 2 months free">Billed monthly · cancel anytime</div>
+          <a href="#signup" class="btn btn-primary plan-cta">Get Gold</a>
+          <p class="incl">Everything in Steel, plus</p>
+          <ul class="plan-feats">
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#E8822A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Priority <b>3-hour</b> arrival window</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#E8822A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>$59 diagnostic</b> — save $36</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#E8822A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>5% off</b> all repairs</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#E8822A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Lifetime</b> repair warranty</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ULTIMATE / ONYX -->
+      <div class="plancard">
+        <div class="passcard onyx">
+          <svg class="guil" style="color:#caa45e"><rect width="100%" height="100%" fill="url(#guil)"/></svg>
+          <div class="pc-top"><div class="pc-brand">ONE SEASON<small>HEATING &amp; AIR</small></div><div class="pc-tier">Ultimate</div></div>
+          <div class="pc-name" style="font-size:1.5rem">Season Pass<span style="font-size:.74rem">Onyx</span></div>
+        </div>
+        <div class="plan-body">
+          <div class="plan-price"><span class="amt" data-monthly="$34" data-annual="$340">$34</span><span class="per" data-monthly="/ mo" data-annual="/ yr">/ mo</span></div>
+          <div class="plan-note" data-monthly="Billed monthly · cancel anytime" data-annual="Billed annually · 2 months free">Billed monthly · cancel anytime</div>
+          <a href="#signup" class="btn btn-ghost plan-cta">Get Onyx</a>
+          <p class="incl">Everything in Gold, plus</p>
+          <ul class="plan-feats">
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>VIP <b>2-hour</b> arrival window</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>$49 diagnostic</b> — save $46</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>15% off</b> all repairs</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2E7C9A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Front-of-line VIP scheduling</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPARISON ============ -->
+<section class="sec sec--paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Compare passes</span>
+      <h2>Every detail, side by side</h2>
+    </div>
+    <div class="tbl-scroll">
+      <table class="tbl">
+        <thead><tr><th style="text-align:left">Feature</th><th>Steel</th><th class="feat">Gold<span class="pop">Most Popular</span></th><th>Onyx</th></tr></thead>
+        <tbody>
+          <tr><th>Two seasonal tune-ups</th><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="feat yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td></tr>
+          <tr><th>Inspection &amp; cleaning</th><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="feat yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td></tr>
+          <tr><th>Rainy Day Fund credits</th><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="feat yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td></tr>
+          <tr><th>Reminders &amp; arrival alerts</th><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="feat yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td></tr>
+          <tr><th>Arrival window</th><td>Up to 5 hrs</td><td class="feat">3 hrs</td><td>2 hrs · priority</td></tr>
+          <tr><th>Standard diagnostic</th><td>$95</td><td class="feat">$59</td><td>$49</td></tr>
+          <tr><th>After-hours diagnostic</th><td>$169</td><td class="feat">$139</td><td>$119</td></tr>
+          <tr><th>Repair discount</th><td class="no">—</td><td class="feat">5%</td><td>15%</td></tr>
+          <tr><th>Repair warranty</th><td>1 year</td><td class="feat">Lifetime</td><td>Lifetime</td></tr>
+          <tr><th>Front-of-line VIP scheduling</th><td class="no">—</td><td class="feat no">—</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></td></tr>
+          <tr class="price-row"><th>Price</th><td>$14<span style="font-size:.78rem;font-weight:600;color:var(--muted)">/mo</span></td><td class="feat">$24<span style="font-size:.78rem;font-weight:600;color:var(--muted)">/mo</span></td><td>$34<span style="font-size:.78rem;font-weight:600;color:var(--muted)">/mo</span></td></tr>
+          <tr><th></th><td><a href="#signup" class="btn btn-ghost" style="padding:.6rem .8rem;font-size:.84rem">Get Steel</a></td><td class="feat"><a href="#signup" class="btn btn-primary" style="padding:.6rem .8rem;font-size:.84rem">Get Gold</a></td><td><a href="#signup" class="btn btn-ghost" style="padding:.6rem .8rem;font-size:.84rem">Get Onyx</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="sec sec--white">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Reviews</span>
+      <h2>Neighbors who stopped worrying about it</h2>
+      <div class="rating">
+        <span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg></span>
+        <strong>4.9 / 5</strong><span style="color:var(--muted);font-size:.92rem">from 500+ verified customers</span>
+      </div>
+    </div>
+    <div class="revs">
+      <div class="rev">
+        <div class="qstars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg></div>
+        <p>"The spring tune-up caught a worn part before it quit on us in July. The pass paid for itself, and the arrival texts are so handy."</p>
+        <div class="who"><span class="av">SM</span><div><b>Sarah M.</b><small>Gold member · Irvine</small></div></div>
+      </div>
+      <div class="rev">
+        <div class="qstars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg></div>
+        <p>"With Onyx I get same-day priority and 15% off every repair. They're honest about what actually needs fixing — no upselling, ever."</p>
+        <div class="who"><span class="av">DT</span><div><b>David T.</b><small>Onyx member · Tustin</small></div></div>
+      </div>
+      <div class="rev">
+        <div class="qstars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.1 8.6 22 9.6 17 14.5 18.2 21.5 12 18.2 5.8 21.5 7 14.5 2 9.6 8.9 8.6 12 2"/></svg></div>
+        <p>"Signing up took five minutes and the Rainy Day Fund is quietly building toward a new unit. Wish I'd joined years ago."</p>
+        <div class="who"><span class="av">LR</span><div><b>Linda R.</b><small>Steel member · Lake Forest</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="sec sec--paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">FAQ</span>
+      <h2>Good questions, straight answers</h2>
+    </div>
+    <div class="faq">
+      <details class="q" open><summary>What happens during a tune-up?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary><div class="ans">We inspect, test, and clean the key parts of your heating or cooling system — refrigerant, electrical connections, airflow, and safety controls — so it runs efficiently and reliably all season.</div></details>
+      <details class="q"><summary>How often will you visit?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary><div class="ans">Twice a year — once in spring for your AC, once in fall for your heat. We schedule both and send reminders so you never miss one.</div></details>
+      <details class="q"><summary>What is the Rainy Day Fund?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary><div class="ans">Every month of membership earns credit toward a future system replacement — so when it's time to upgrade, you've already got a head start.</div></details>
+      <details class="q"><summary>Is there a contract? Can I cancel?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary><div class="ans">No long-term contracts. Upgrade, downgrade, or cancel anytime — no penalties, no hassle.</div></details>
+      <details class="q"><summary>Do you service all brands?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary><div class="ans">Yes. Our licensed technicians service and maintain all major makes and models of heating and air conditioning equipment.</div></details>
+      <details class="q"><summary>How do the repair discounts work?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary><div class="ans">Members save on every repair — 5% on Gold, 15% on Onyx — plus lower diagnostic fees and priority scheduling whenever something needs attention.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="cta-stage" id="signup">
+  <div class="wrap cta-grid">
+    <div>
+      <h2>Ready when you are.</h2>
+      <p class="lead">Join the Season Pass today and stop worrying about your heating and cooling. Sign up in minutes — a comfort specialist will confirm your first tune-up.</p>
+      <ul class="cta-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>No long-term contracts — cancel anytime</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Licensed &amp; insured · #1038022</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Backed by 500+ five-star reviews</li>
+      </ul>
+    </div>
+    <form class="form" onsubmit="return false;">
+      <h3>Get your Season Pass</h3>
+      <p class="sub">Tell us where to send your comfort specialist.</p>
+      <div class="field"><label for="f-name">Full name</label><input id="f-name" type="text" placeholder="Jane Smith" /></div>
+      <div class="field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" placeholder="(949) 555-0123" /></div>
+      <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" placeholder="jane@email.com" /></div>
+      <div class="field"><label for="f-addr">Home address</label><input id="f-addr" type="text" placeholder="123 Comfort Ln, Irvine, CA" /></div>
+      <div class="field"><label for="f-plan">Pass</label><select id="f-plan"><option>Gold — $24/mo (Most Popular)</option><option>Steel — $14/mo</option><option>Onyx — $34/mo</option><option>Not sure yet — help me choose</option></select></div>
+      <button type="submit" class="btn btn-primary">Sign up today</button>
+      <p class="fine">By signing up you agree to be contacted about your membership. No spam, ever.</p>
+    </form>
+  </div>
+</section>
+
+<script>
+  (function(){
+    var toggle=document.querySelector('.toggle');
+    if(toggle){
+      var buttons=toggle.querySelectorAll('button');
+      function setMode(mode){
+        toggle.setAttribute('data-mode',mode);
+        buttons.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.bill===mode));});
+        document.querySelectorAll('[data-'+mode+']').forEach(function(el){
+          var v=el.getAttribute('data-'+mode);if(v)el.textContent=v;
+        });
+      }
+      buttons.forEach(function(b){b.addEventListener('click',function(){setMode(b.dataset.bill);});});
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click',function(e){
+        var t=document.querySelector(a.getAttribute('href'));
+        if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+      });
+    });
+  })();
+</script>
+</body>
+</html>
