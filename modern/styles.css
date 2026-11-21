@@ -62,7 +62,7 @@ ul{list-style:none}
 /* Nav */
 .nav{position:fixed;inset:0 0 auto;z-index:50;color:#fff;transition:background .35s,color .35s,box-shadow .35s,transform .45s var(--e)}
 .nav__in{max-width:var(--wrap);margin:0 auto;padding:18px var(--g);display:flex;align-items:center;gap:28px}
-.nav__logo{position:relative;display:block;width:168px;line-height:0}
+.nav__logo{position:relative;display:block;flex:none;width:196px;line-height:0}
 .nav__logo img{width:100%;height:auto;transition:opacity .3s}
 .logo-dark{position:absolute;inset:0;opacity:0}
 .nav__links{display:flex;gap:30px;margin-left:auto;font-size:.95rem}
@@ -738,7 +738,7 @@ button.link{font:inherit;font-weight:500;color:inherit;cursor:pointer}
 @media (max-width:640px){
   body{font-size:16px}
   .nav__in{padding:14px var(--g);gap:12px}
-  .nav__logo{width:142px}
+  .nav__logo{width:160px}
   .nav__tel{display:none}
   .nav__cta .btn{height:40px;padding:0 14px;font-size:.88rem}
   .nav__cta{margin-left:auto;gap:6px}
