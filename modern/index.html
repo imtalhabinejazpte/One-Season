@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>One Season Heating &amp; Air Conditioning | Irvine &amp; Orange County</title>
 <meta name="description" content="Heating, cooling and clean air for Irvine and Orange County homes. Repairs, new systems, tune-ups and the Season Pass maintenance plan." />
+<link rel="icon" href="favicon.ico" sizes="any" />
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="icon" href="icon-192.png" type="image/png" sizes="192x192" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#0551A5" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="One Season Heating &amp; Air Conditioning" />
+<meta property="og:title" content="One Season Heating &amp; Air Conditioning | Irvine &amp; Orange County" />
+<meta property="og:description" content="Heating, cooling and clean air for Irvine and Orange County homes. Repairs, new systems, tune-ups and the Season Pass maintenance plan." />
+<meta property="og:url" content="https://one-season-modern.vercel.app/" />
+<meta property="og:image" content="https://one-season-modern.vercel.app/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="A One Season technician servicing an outdoor unit. Comfort only has one season." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://one-season-modern.vercel.app/og.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;450;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -92,13 +108,26 @@
     </div>
   </div>
   <div class="sheet" id="sheet" hidden>
-    <div class="sheet__in">
+    <div class="sheet__in" data-lenis-prevent>
       <p class="sheet__k">Services</p>
       <nav class="sheet__big" aria-label="Services">
-        <a href="https://oneseasonair.com/services/ac-repair-maintenance/">Cooling <i class="ph-light ph-arrow-up-right"></i></a>
-        <a href="https://oneseasonair.com/services/furnace-repair/">Heating <i class="ph-light ph-arrow-up-right"></i></a>
-        <a href="https://oneseasonair.com/services/air-purifier-installation/">Clean air <i class="ph-light ph-arrow-up-right"></i></a>
-        <a href="#season-pass">Season Pass <span class="sheet__tag">From $14.95/mo</span></a>
+        <div class="sacc">
+          <button type="button" class="sacc__btn" aria-expanded="false" aria-controls="sacc-cool">Cooling <i class="ph-light ph-plus" aria-hidden="true"></i></button>
+          <ul class="sacc__list" id="sacc-cool" hidden><li><a href="https://oneseasonair.com/services/ac-repair-maintenance/">AC repair and maintenance</a></li><li><a href="https://oneseasonair.com/services/ac-installation-replacement/">AC installation and replacement</a></li><li><a href="https://oneseasonair.com/services/air-conditioner-ac-tune-up/">AC tune-up</a></li></ul>
+        </div>
+        <div class="sacc">
+          <button type="button" class="sacc__btn" aria-expanded="false" aria-controls="sacc-heat">Heating <i class="ph-light ph-plus" aria-hidden="true"></i></button>
+          <ul class="sacc__list" id="sacc-heat" hidden><li><a href="https://oneseasonair.com/services/furnace-repair/">Furnace repair</a></li><li><a href="https://oneseasonair.com/services/furnace-installation-replacement/">Furnace installation and replacement</a></li><li><a href="https://oneseasonair.com/services/furnace-tune-up/">Furnace tune-up</a></li></ul>
+        </div>
+        <div class="sacc">
+          <button type="button" class="sacc__btn" aria-expanded="false" aria-controls="sacc-hvac">Whole-home HVAC <i class="ph-light ph-plus" aria-hidden="true"></i></button>
+          <ul class="sacc__list" id="sacc-hvac" hidden><li><a href="https://oneseasonair.com/services/hvac-repair-maintenance/">HVAC repair and maintenance</a></li><li><a href="https://oneseasonair.com/services/hvac-installation/">HVAC installation</a></li><li><a href="https://oneseasonair.com/services/hvac-replacement/">HVAC replacement</a></li><li><a href="https://oneseasonair.com/services/hvac-cleaning-inspection/">Cleaning and inspection</a></li><li><a href="https://oneseasonair.com/services/thermostat-repair/">Thermostat repair</a></li></ul>
+        </div>
+        <div class="sacc">
+          <button type="button" class="sacc__btn" aria-expanded="false" aria-controls="sacc-air">Clean air <i class="ph-light ph-plus" aria-hidden="true"></i></button>
+          <ul class="sacc__list" id="sacc-air" hidden><li><a href="https://oneseasonair.com/services/air-purifier-installation/">Whole-home air purification</a></li><li><a href="https://oneseasonair.com/services/air-filter-maintenance/">Air filter maintenance</a></li></ul>
+        </div>
+        <a class="sacc__link" href="#season-pass">Season Pass <span class="sheet__tag">From $14.95/mo</span></a>
       </nav>
       <a class="sheet__card" href="#book">
         <img src="img/team-van.webp" alt="" loading="lazy" />
@@ -139,7 +168,7 @@
   <div class="wrap trust__in">
     <div class="trust__item">
       <span class="stars" aria-hidden="true"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></span>
-      <b><span class="tbc" title="Confirm with client">4.9</span> on Google</b>
+      <b><img class="gico" src="img/google.svg" alt="" width="18" height="18" /><span class="tbc" title="Confirm with client">4.9</span> on Google</b>
       <span><span class="tbc" title="Confirm with client">500+</span> five-star reviews</span>
     </div>
     <div class="trust__item"><i class="ph-light ph-seal-check"></i><b>Licensed and insured</b><span>CA license #1038022</span></div>
@@ -504,17 +533,20 @@
   <div class="wrap reviews__head">
     <h2 class="h2 rv">Trusted by Orange County homeowners.</h2>
     <div class="reviews__ctl">
-      <a class="link" href="https://www.google.com/search?q=One+Season+Heating+and+Air+Conditioning+Irvine">Read reviews on Google <i class="ph-light ph-arrow-up-right"></i></a>
+      <a class="src" href="https://www.google.com/search?q=One+Season+Heating+and+Air+Conditioning+Irvine" target="_blank" rel="noopener"><img class="gico" src="img/google.svg" alt="" width="18" height="18" />Google <i class="ph-light ph-arrow-up-right"></i></a>
+      <a class="src" href="https://www.yelp.com/biz/one-season-heating-and-air-conditioning-irvine" target="_blank" rel="noopener"><img class="gico" src="img/yelp.svg" alt="" width="18" height="18" />Yelp <i class="ph-light ph-arrow-up-right"></i></a>
       <button type="button" class="arrow" data-rev="-1" aria-label="Previous reviews"><i class="ph-light ph-arrow-left"></i></button>
       <button type="button" class="arrow" data-rev="1" aria-label="Next reviews"><i class="ph-light ph-arrow-right"></i></button>
     </div>
   </div>
   <div class="revs" data-revs>
     <div class="rev rev--score">
+      <span class="score__src"><img class="gico" src="img/google.svg" alt="" width="18" height="18" />Google rating</span>
       <p class="score"><span class="tbc" title="Confirm with client">4.9</span></p>
       <span class="stars" aria-label="5 stars"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></span>
       <p class="score__sub">From <span class="tbc" title="Confirm with client">500+</span> Google reviews</p>
-      <a class="btn btn--accent btn--sm" href="https://www.google.com/search?q=One+Season+Heating+and+Air+Conditioning+Irvine">Read on Google</a>
+      <a class="btn btn--accent btn--sm" href="https://www.google.com/search?q=One+Season+Heating+and+Air+Conditioning+Irvine" target="_blank" rel="noopener">Read on Google</a>
+      <a class="score__yelp" href="https://www.yelp.com/biz/one-season-heating-and-air-conditioning-irvine" target="_blank" rel="noopener"><img class="gico" src="img/yelp.svg" alt="" width="18" height="18" /><b>4.9</b>&nbsp;on Yelp, 89 reviews <i class="ph-light ph-arrow-up-right"></i></a>
     </div>
     <figure class="rev"><span class="stars" aria-label="5 stars"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></span><blockquote>Excellent response and follow through with great communication from their office. The technician I give six stars.</blockquote><figcaption>Dennis Toussieng</figcaption></figure>
     <figure class="rev"><span class="stars" aria-label="5 stars"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></span><blockquote>Not only did they have a very good solution for replacing the old furnace and air conditioner, but they also redid much of the ductwork so everything works better.</blockquote><figcaption>David Nale</figcaption></figure>
@@ -655,13 +687,14 @@
 
     <div class="foot__trust">
       <a class="foot__rating" href="https://www.google.com/maps/place/One+Season+Heating+and+Air+Conditioning/@33.65811,-117.7511805,17z/data=!3m1!4b1!4m6!3m5!1s0xa162b3ba41d5f225:0x1c4cc9748756c7a0!8m2!3d33.65811!4d-117.7511805!16s%2Fg%2F11l1m_t26v" target="_blank" rel="noopener">
-        <span class="foot__stars"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></span>
+        <img class="gico gico--lg" src="img/google.svg" alt="" width="18" height="18" /><span class="foot__stars"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></span>
         <span><b><span class="tbc" title="Confirm with client">4.9</span> on Google</b> Read our reviews</span>
       </a>
       <span class="foot__lic"><i class="ph-light ph-seal-check"></i>Licensed and insured, CA #1038022</span>
       <div class="foot__social">
         <a href="https://www.facebook.com/OneSeasonAir" target="_blank" rel="noopener" aria-label="Facebook"><i class="ph-light ph-facebook-logo"></i></a>
         <a href="https://www.instagram.com/oneseasonair/" target="_blank" rel="noopener" aria-label="Instagram"><i class="ph-light ph-instagram-logo"></i></a>
+        <a href="https://www.yelp.com/biz/one-season-heating-and-air-conditioning-irvine" target="_blank" rel="noopener" aria-label="Yelp"><img class="yico" src="img/yelp-white.svg" alt="" width="18" height="18" /></a>
         <a href="https://www.youtube.com/@oneseasonair" target="_blank" rel="noopener" aria-label="YouTube"><i class="ph-light ph-youtube-logo"></i></a>
       </div>
     </div>

@@ -23,6 +23,12 @@
     menuBtn.setAttribute('aria-label', open ? 'Menu' : 'Close menu');
     nav.classList.toggle('is-solid', !open || scrollY > 40);
   });
+  /* Menu: service accordions, one open at a time */
+  $$('.sacc__btn').forEach(b => b.addEventListener('click', () => {
+    const open = b.getAttribute('aria-expanded') === 'true';
+    $$('.sacc__btn').forEach(x => { x.setAttribute('aria-expanded', 'false'); document.getElementById(x.getAttribute('aria-controls')).hidden = true; });
+    if (!open) { b.setAttribute('aria-expanded', 'true'); document.getElementById(b.getAttribute('aria-controls')).hidden = false; }
+  }));
   $$('#sheet a').forEach(a => a.addEventListener('click', () => {
     sheet.hidden = true; lockPage(false); menuBtn.setAttribute('aria-expanded', 'false');
     menuBtn.querySelector('i').className = 'ph-light ph-list'; menuBtn.setAttribute('aria-label', 'Menu');
