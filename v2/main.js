@@ -5,18 +5,26 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const BOOK = 'https://ai.getbreezyapp.com/booking/one-season-heating-and-air-conditioning?utm_source=website&utm_medium=quiz';
 
-  /* Menu sheet */
+  /* Menu sheet: full-height on phones, page behind stays put */
+  const lockPage = (on) => {
+    document.documentElement.style.overflow = on ? 'hidden' : '';
+    document.documentElement.classList.toggle('menu-open', on);
+    if (on) nav.classList.remove('is-up');
+    if (on) sheet.style.height = (innerHeight - nav.offsetHeight) + 'px';
+    if (window.__lenis) on ? window.__lenis.stop() : window.__lenis.start();
+  };
   const menuBtn = $('.nav__menu'), sheet = $('#sheet'), nav = $('[data-nav]');
   menuBtn.addEventListener('click', () => {
     const open = menuBtn.getAttribute('aria-expanded') === 'true';
     menuBtn.setAttribute('aria-expanded', String(!open));
     sheet.hidden = open;
+    lockPage(!open);
     menuBtn.querySelector('i').className = open ? 'ph-light ph-list' : 'ph-light ph-x';
     menuBtn.setAttribute('aria-label', open ? 'Menu' : 'Close menu');
     nav.classList.toggle('is-solid', !open || scrollY > 40);
   });
   $$('#sheet a').forEach(a => a.addEventListener('click', () => {
-    sheet.hidden = true; menuBtn.setAttribute('aria-expanded', 'false');
+    sheet.hidden = true; lockPage(false); menuBtn.setAttribute('aria-expanded', 'false');
     menuBtn.querySelector('i').className = 'ph-light ph-list'; menuBtn.setAttribute('aria-label', 'Menu');
   }));
 
