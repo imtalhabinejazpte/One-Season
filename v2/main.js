@@ -537,11 +537,6 @@
     $$('.cl img').forEach(img => gsap.fromTo(img, { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom 55%', scrub: true } }));
     return () => { steps.style.removeProperty('--p'); hsteps.forEach(s => s.classList.remove('is-past')); };
   });
-  /* Equipment swipe row: the card in view brings its product forward */
-  const reelTrack = $('[data-reel]'), scenes = $$('.scene');
-  const sio = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-on', e.isIntersecting)), { root: reelTrack, threshold: .6 });
-  const watchScenes = () => { scenes.forEach(s => sio.unobserve(s)); if (innerWidth <= 820) scenes.forEach(s => sio.observe(s)); else scenes.forEach(s => s.classList.remove('is-on')); };
-  watchScenes(); addEventListener('resize', watchScenes);
 
   ScrollTrigger.refresh();
   addEventListener('load', () => ScrollTrigger.refresh());
