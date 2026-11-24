@@ -526,6 +526,23 @@
   /* Final image slow zoom */
   gsap.fromTo('.final__img img', { scale: 1.12 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.final', start: 'top bottom', end: 'bottom bottom', scrub: true } });
 
+  /* Phones and tablets: scroll-linked moments (Aira's step rail, Quilt's photo zoom, Jetson's swipe cards) */
+  mm.add('(max-width: 1100px)', () => {
+    const steps = $('.how__steps');
+    if (reduce) { steps.style.setProperty('--p', 1); hsteps.forEach(s => s.classList.add('is-past')); return; }
+    ScrollTrigger.create({ trigger: steps, start: 'top 65%', end: 'bottom 65%', scrub: true,
+      onUpdate: self => steps.style.setProperty('--p', self.progress.toFixed(3)) });
+    hsteps.forEach(s => ScrollTrigger.create({ trigger: s.querySelector('.hstep__row'), start: 'center 65%', toggleClass: { targets: s, className: 'is-past' } }));
+    // collage photos ease out of a slight zoom as they scroll in
+    $$('.cl img').forEach(img => gsap.fromTo(img, { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom 55%', scrub: true } }));
+    return () => { steps.style.removeProperty('--p'); hsteps.forEach(s => s.classList.remove('is-past')); };
+  });
+  /* Equipment swipe row: the card in view brings its product forward */
+  const reelTrack = $('[data-reel]'), scenes = $$('.scene');
+  const sio = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-on', e.isIntersecting)), { root: reelTrack, threshold: .6 });
+  const watchScenes = () => { scenes.forEach(s => sio.unobserve(s)); if (innerWidth <= 820) scenes.forEach(s => sio.observe(s)); else scenes.forEach(s => s.classList.remove('is-on')); };
+  watchScenes(); addEventListener('resize', watchScenes);
+
   ScrollTrigger.refresh();
   addEventListener('load', () => ScrollTrigger.refresh());
 })();

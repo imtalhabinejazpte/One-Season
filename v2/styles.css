@@ -890,3 +890,58 @@ button.link{font:inherit;font-weight:500;color:inherit;cursor:pointer}
   .hero__img img{object-position:50% 50%}
   .hero__img::after{background:linear-gradient(180deg,rgba(3,32,70,.55) 0%,rgba(3,32,70,0) 22%,rgba(3,32,70,0) 66%,rgba(3,32,70,.7) 88%,#032046 100%)}
 }
+
+/* Phones: one text edge per section, swipe rows with a peek, scroll-linked steps
+   (benchmarked on Jetson, Heatable, Aira and Quilt at 375px) */
+@media (max-width:820px){
+  /* Statement and final heading: left, like every other section */
+  .collage{padding:clamp(64px,14vw,100px) 0}
+  .collage__text p{text-align:left;margin:0;max-width:20ch;font-size:clamp(1.75rem,7.4vw,2.4rem)}
+  .cluster{margin-top:clamp(36px,8vw,60px)}
+  .final__h{text-align:left}
+
+  /* Warranty and award: drop the card so the text sits on the page edge */
+  .warranty__card,.award__card{padding:0;background:none;border:0;border-radius:0;box-shadow:none;overflow:visible}
+
+  /* Cards: one inner padding (20px) */
+  .pass__head{padding:24px 20px calc(24px + 60px)}
+  .plans{padding:0}
+  .plan{padding:24px 20px}
+  .pass:not(.is-annual) .plan__deal{display:none}
+  .rev{padding:24px 20px}
+  .ftile{padding:20px}
+
+  /* Equipment: swipe row, next card peeks in, copy left-aligned */
+  .reel{padding:clamp(56px,12vw,90px) 0}
+  .reel__track{flex-direction:row;width:auto;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--g);scroll-padding-inline:var(--g);scrollbar-width:none;overscroll-behavior-x:contain}
+  .reel__track::-webkit-scrollbar{display:none}
+  .scene{flex:0 0 84%;width:auto;height:auto;padding:22px 20px 24px;border-radius:var(--r-lg);background:var(--white);border:1px solid var(--line);align-items:stretch;justify-content:flex-start;scroll-snap-align:start;overflow:hidden}
+  .scene__word{font-size:clamp(3.6rem,17vw,5.2rem);text-align:left;margin:0 0 -.1em}
+  .scene__prod{align-items:center;transform:scale(.88);opacity:.55;transition:transform .7s var(--e),opacity .7s var(--e)}
+  .scene.is-on .scene__prod{transform:none;opacity:1}
+  .scene__prod--wide img{width:100%;max-width:none}
+  .scene__prod--tall img{height:min(46vw,230px)}
+  .scene__tag{align-self:flex-start;margin-top:6px}
+  .scene__copy{text-align:left;margin-top:14px}
+  .scene__btns{justify-content:flex-start}
+}
+@media (max-width:1100px){
+  /* How it works: a rail that fills as you scroll, dots light up per step */
+  .how__steps{position:relative;padding-left:30px;border-top:0}
+  .how__steps::before,.how__steps::after{content:"";position:absolute;left:5px;top:4px;bottom:48px;width:2px;border-radius:2px;background:rgba(255,255,255,.18)}
+  .how__steps::after{background:var(--orange);transform-origin:top;transform:scaleY(var(--p,0))}
+  .hstep{border-bottom:0;margin-bottom:0;padding-bottom:48px}
+  .hstep__row{position:relative}
+  .hstep__row::before{content:"";position:absolute;left:-30px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--navy);box-shadow:0 0 0 2px rgba(255,255,255,.35);transition:background .4s,box-shadow .4s}
+  .hstep.is-past .hstep__row::before{background:var(--orange);box-shadow:0 0 0 2px var(--orange)}
+}
+@media (max-width:640px){
+  /* Recent work: swipe row instead of a long stack */
+  .work__grid{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--g);scrollbar-width:none;overscroll-behavior-x:contain}
+  .work__grid::-webkit-scrollbar{display:none}
+  .wcard{flex:0 0 82%;scroll-snap-align:start}
+  .wcard--tall .wcard__img{aspect-ratio:4/3}
+}
+@media (prefers-reduced-motion:reduce){.scene__prod{transform:none;opacity:1;transition:none}}
+@media (max-width:640px){.wcard figcaption{flex-direction:column;gap:2px;padding:12px 2px 0}}
+@media (max-width:820px){.faq__card{padding:24px 20px}.quiz__panel{padding-left:10px;padding-right:10px}.quiz__intro-copy{padding-left:10px;padding-right:10px}}
