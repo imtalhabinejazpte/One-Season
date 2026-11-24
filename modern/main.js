@@ -477,9 +477,33 @@
   }
 
   /* Hero: quiet entrance + slow parallax */
-  gsap.from('.hero__img img', { scale: 1.08, duration: 2.4, ease: 'power3.out' });
-  gsap.from('.hero__h1 span', { y: 40, opacity: 0, duration: 1.3, ease: 'power3.out', stagger: .12, delay: .2 });
-  gsap.from('.hero__aside', { y: 20, opacity: 0, duration: 1.2, ease: 'power3.out', delay: .55 });
+  const heroIn = (d = 0) => {
+    gsap.from('.hero__img img', { scale: 1.08, duration: 2.4, ease: 'power3.out', delay: d });
+    gsap.from('.hero__h1 span', { y: 40, opacity: 0, duration: 1.3, ease: 'power3.out', stagger: .12, delay: d + .2 });
+    gsap.from('.hero__aside', { y: 20, opacity: 0, duration: 1.2, ease: 'power3.out', delay: d + .55 });
+  };
+
+  /* Preloader: leaves once the page is ready and the logo has finished building */
+  const pre = $('.pre'), root = document.documentElement;
+  if (pre && root.classList.contains('is-pre')) {
+    if (window.__lenis) window.__lenis.stop();
+    let gone = false;
+    const leave = () => {
+      if (gone) return; gone = true;
+      setTimeout(() => {
+        heroIn(reduce ? 0 : .45);
+        pre.classList.add('is-out');
+        setTimeout(() => { root.classList.remove('is-pre'); if (window.__lenis) window.__lenis.start(); pre.remove(); ScrollTrigger.refresh(); }, reduce ? 320 : 1250);
+      }, reduce ? 0 : 280);
+    };
+    const MIN = reduce ? 300 : 2100; // the logo build takes ~2s
+    const ready = () => setTimeout(leave, Math.max(0, MIN - performance.now()));
+    if (document.readyState === 'complete') ready(); else addEventListener('load', ready, { once: true });
+    setTimeout(leave, Math.max(0, 4500 - performance.now()));
+  } else {
+    if (pre) pre.remove();
+    heroIn();
+  }
   gsap.to('.hero__img img', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
   /* Jetson moment: horizontal scenes */
